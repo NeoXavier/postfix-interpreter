@@ -23,18 +23,22 @@ string REPL::prompt()
 
 void REPL::eval(string& expression)
 {
+    if (expression == "printTable") {
+        symbolTable.printTable();
+        return;
+    }
     // Tokenise expression
     for (char& c : expression) {
         if (isalpha(c) || isdigit(c)) {
             postfixStack.push(c);
             continue;
         }
+
         if (c == ' ') {
-            cout << "Space" << endl;
         } else if (c == '+' || c == '-' || c == '*' || c == '/') {
             arithmetic(c);
         } else if (c == '=') {
-            cout << "Equal" << endl;
+            assignment();
         } else {
             cout << "Invalid character: " << c << endl;
         }
@@ -43,7 +47,6 @@ void REPL::eval(string& expression)
         cout << ' ' << postfixStack.top();
         postfixStack.pop();
     }
-    cout << endl;
 
     // Loop through tokens
     // If token is a number, push to postfixStack
@@ -52,9 +55,24 @@ void REPL::eval(string& expression)
 
 void REPL::arithmetic(char& op)
 {
-    int num1 = postfixStack.top();
+    // First operand
+    int num1;
+    if (isalpha(postfixStack.top())) {
+        num1 = symbolTable.search(postfixStack.top());
+    } else {
+        num1 = postfixStack.top();
+        num1 += -'0';
+    }
     postfixStack.pop();
-    int num2 = postfixStack.top();
+
+    // Second operand
+    int num2;
+    if (isalpha(postfixStack.top()))
+        num2 = symbolTable.search(postfixStack.top());
+    else {
+        num2 = postfixStack.top();
+        num2 += -'0';
+    }
     postfixStack.pop();
 
     int result;
@@ -79,9 +97,18 @@ void REPL::arithmetic(char& op)
         throw std::invalid_argument("Invalid operator");
     }
 
+    cout << "[REPL::arithmetic]" << num1 << "+" << num2 << "=" << result << endl;
     postfixStack.push(result);
 }
 
 void REPL::assignment()
 {
+    int num = postfixStack.top() - '0';
+    postfixStack.pop();
+
+    char var = postfixStack.top();
+    postfixStack.pop();
+
+    // Insert into hashtable
+    symbolTable.insert(var, num);
 }

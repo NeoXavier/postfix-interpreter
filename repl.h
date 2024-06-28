@@ -1,5 +1,8 @@
 #include <stack>
 #include <string>
+
+#include "hashtable.h"
+
 using namespace std;
 
 class REPL {
@@ -14,4 +17,5 @@ private:
     void assignment();
 
     stack<char> postfixStack;
+    HashTable symbolTable;
 };

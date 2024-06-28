@@ -11,9 +11,12 @@ public:
     int search(char key);
     void remove(char key); // delete is a keyword
     void printTable();
+    int getIndex(char key);
+    unsigned long testFunc();
 
 private:
     int tableSize = 26;
-    unsigned long hash(char* key);
+    unsigned long hash(char* key) const;
+    unsigned long hash(char key) const;
     list<pair<char, int>> table[26];
 };
