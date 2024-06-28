@@ -11,6 +11,7 @@ private:
     void eval(string& expression);
 
     void arithmetic(char& op);
+    void assignment();
 
-    stack<int> numStack;
+    stack<char> postfixStack;
 };

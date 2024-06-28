@@ -26,7 +26,7 @@ void REPL::eval(string& expression)
     // Tokenise expression
     for (char& c : expression) {
         if (isalpha(c) || isdigit(c)) {
-            numStack.push(int(c - '0'));
+            postfixStack.push(c);
             continue;
         }
         if (c == ' ') {
@@ -39,23 +39,23 @@ void REPL::eval(string& expression)
             cout << "Invalid character: " << c << endl;
         }
     }
-    while (!numStack.empty()) {
-        cout << ' ' << numStack.top();
-        numStack.pop();
+    while (!postfixStack.empty()) {
+        cout << ' ' << postfixStack.top();
+        postfixStack.pop();
     }
     cout << endl;
 
     // Loop through tokens
-    // If token is a number, push to numStack
+    // If token is a number, push to postfixStack
     // If token is an operator
 }
 
 void REPL::arithmetic(char& op)
 {
-    int num1 = numStack.top();
-    numStack.pop();
-    int num2 = numStack.top();
-    numStack.pop();
+    int num1 = postfixStack.top();
+    postfixStack.pop();
+    int num2 = postfixStack.top();
+    postfixStack.pop();
 
     int result;
 
@@ -79,5 +79,9 @@ void REPL::arithmetic(char& op)
         throw std::invalid_argument("Invalid operator");
     }
 
-    numStack.push(result);
+    postfixStack.push(result);
+}
+
+void REPL::assignment()
+{
 }
