@@ -1,22 +1,21 @@
 // Standing issues:
 // make list dynamic to talbe size
 #include <list>
+#include <string>
 using namespace std;
 
 class HashTable {
 public:
     HashTable();
     bool is_empty();
-    void insert(char key, int value);
-    int search(char key);
-    void remove(char key); // delete is a keyword
+    void insert(string key, int value);
+    int search(string key);
+    void remove(string key); // delete is a keyword
     void printTable();
-    int getIndex(char key);
-    unsigned long testFunc();
 
 private:
     int tableSize = 26;
     unsigned long hash(char* key) const;
-    unsigned long hash(char key) const;
-    list<pair<char, int>> table[26];
+    list<pair<string, int>> table[26];
+    // unsigned long hash(char key) const;
 };

@@ -4,9 +4,7 @@
 
 using namespace std;
 
-HashTable::HashTable()
-{
-}
+HashTable::HashTable() { }
 
 bool HashTable::is_empty()
 {
@@ -22,10 +20,9 @@ bool HashTable::is_empty()
     return false;
 }
 
-void HashTable::insert(char key, int value)
+void HashTable::insert(string key, int value)
 {
-    cout << "[HashTable::insert] [" << key << ", " << value << "]" << endl;
-    int index = hash(key);
+    int index = hash((char*)&key);
     auto& list = table[index];
     cout << "[HashTable::insert] Index: " << index << endl;
 
@@ -41,16 +38,16 @@ void HashTable::insert(char key, int value)
     }
 
     if (!keyFound) {
-        list.emplace_back(pair<char, int>(key, value));
+        list.emplace_back(pair<string, int>(key, value));
     }
 
     return;
 }
 
-int HashTable::search(char key)
+int HashTable::search(string key)
 {
     cout << "[HashTable::search] [" << key << "]" << endl;
-    int index = hash(key);
+    int index = hash((char*)&key);
     cout << "[HashTable::search] Index: " << index << endl;
     auto& list = table[index];
 
@@ -69,10 +66,10 @@ int HashTable::search(char key)
     return 0;
 }
 
-void HashTable::remove(char key)
+void HashTable::remove(string key)
 {
 
-    int index = hash(key);
+    int index = hash((char*)&key);
     auto& list = table[index];
 
     // Check if key already exists
@@ -108,12 +105,6 @@ void HashTable::printTable()
     cout << "--------------" << endl;
 }
 
-// Test hash function
-int HashTable::getIndex(char key)
-{
-    return hash(key);
-}
-
 // djb2 hash function from https://gist.github.com/MohamedTaha98/ccdf734f13299efb73ff0b12f7ce429f
 unsigned long HashTable::hash(char* key) const
 {
@@ -126,8 +117,8 @@ unsigned long HashTable::hash(char* key) const
 }
 
 // Hash function for a single character (function overlaod)
-unsigned long HashTable::hash(char key) const
+/* unsigned long HashTable::hash(char key) const
 {
     char keyStr[2] = { key, '\0' };
     return hash(keyStr);
-}
+} */
