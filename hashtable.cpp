@@ -4,41 +4,44 @@
 
 using namespace std;
 
-HashTable::HashTable() { }
+HashTable::HashTable(int size)
+    : tableSize(size)
+{
+    table = new LinkedList[size];
+}
 
 bool HashTable::is_empty()
 {
-    int sum = 0;
-
     for (int i = 0; i < tableSize; i++) {
-        sum += table[i].size();
+        if (!table[i].isEmpty())
+            return false;
     }
-
-    if (sum == 0)
-        return true;
-
-    return false;
+    return true;
 }
 
 void HashTable::insert(string key, int value)
 {
-    int index = hash((char*)&key);
+    int index = hash(key);
     auto& list = table[index];
     cout << "[HashTable::insert] Index: " << index << endl;
 
     // Check if key already exists
     bool keyFound = false;
-    for (auto pair = list.begin(); pair != list.end(); ++pair) {
-        if (pair->first == key) {
-            pair->second = value;
+    Node* nodePtr = list.head;
+
+    // Search for key in linked list, if found, replace value
+    while (nodePtr != nullptr) {
+        if (nodePtr->key == key) {
+            nodePtr->value = value;
             cout << "[HashTable::insert] Key already exists, replacing stored value" << endl;
             keyFound = true;
             break;
         }
+        nodePtr = nodePtr->next;
     }
 
     if (!keyFound) {
-        list.emplace_back(pair<string, int>(key, value));
+        list.insertNode(key, value);
     }
 
     return;
@@ -47,46 +50,32 @@ void HashTable::insert(string key, int value)
 int HashTable::search(string key)
 {
     cout << "[HashTable::search] [" << key << "]" << endl;
-    int index = hash((char*)&key);
+    int index = hash(key);
     cout << "[HashTable::search] Index: " << index << endl;
     auto& list = table[index];
 
-    bool keyFound = false;
-    for (auto pair = list.begin(); pair != list.end(); ++pair) {
-        if (pair->first == key) {
+    Node* nodePtr = list.head;
+
+    while (nodePtr != nullptr) {
+        if (nodePtr->key == key) {
             cout << "[HashTable::search] Key found" << endl;
-            cout << "[HashTable::search] Value: " << pair->second << endl;
-            return pair->second;
+            cout << "[HashTable::search] Value: " << nodePtr->value << endl;
+            return nodePtr->value;
         }
+        nodePtr = nodePtr->next;
     }
 
-    if (!keyFound) {
-        cout << "[HashTable::search] Key not found" << endl;
-    }
+    cout << "[HashTable::search] Key not found" << endl;
     return 0;
 }
 
 void HashTable::remove(string key)
 {
 
-    int index = hash((char*)&key);
+    int index = hash(key);
     auto& list = table[index];
 
-    // Check if key already exists
-    bool keyFound = false;
-    for (auto pair = list.begin(); pair != list.end(); ++pair) {
-        if (pair->first == key) {
-            pair = list.erase(pair);
-            keyFound = true;
-            cout << "[HashTable::remove] Pair removed" << endl;
-            break;
-        }
-    }
-
-    if (!keyFound) {
-        cout << "[HashTable::remove] Pair not found" << endl;
-    }
-
+    list.deleteNode(key);
     return;
 }
 
@@ -95,30 +84,24 @@ void HashTable::printTable()
     cout << "Printing table" << endl;
     cout << "--------------" << endl;
     for (int i = 0; i < tableSize; i++) {
-        if (table[i].size() == 0)
+        if (table[i].isEmpty())
             continue;
-        for (auto pair = table[i].begin(); pair != table[i].end(); ++pair) {
-            cout << pair->first << " " << pair->second << " ";
-        }
-        cout << endl;
+        cout << "List index: " << i << endl;
+        table[i].printList();
     }
     cout << "--------------" << endl;
 }
-
-// djb2 hash function from https://gist.github.com/MohamedTaha98/ccdf734f13299efb73ff0b12f7ce429f
-unsigned long HashTable::hash(char* key) const
+int HashTable::getIndex(string key)
 {
-
-    unsigned long hash = 5381L;
-    int c;
-    while ((c = *key++))
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-    return hash % tableSize;
+    return hash(key);
 }
 
-// Hash function for a single character (function overlaod)
-/* unsigned long HashTable::hash(char key) const
+// djb2 hash function from https://stackoverflow.com/questions/19892609/djb2-by-dan-bernstein-for-c
+int HashTable::hash(std::string const& s)
 {
-    char keyStr[2] = { key, '\0' };
-    return hash(keyStr);
-} */
+    unsigned long hash = 5381;
+    for (auto c : s) {
+        hash = (hash << 5) + hash + c; /* hash * 33 + c */
+    }
+    return hash % tableSize;
+}

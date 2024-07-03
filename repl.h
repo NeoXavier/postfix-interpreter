@@ -1,4 +1,4 @@
-#include <stack>
+#include "stack.h"
 #include <string>
 
 #include "hashtable.h"
@@ -13,11 +13,11 @@ private:
     string prompt();
     void eval(string& expression);
 
-    void arithmetic(char& op);
+    void arithmetic(string& op);
     void assignment();
 
-    stack<string> postfixStack;
-    HashTable symbolTable;
+    Stack* postfixStack;
+    HashTable* symbolTable;
 
     bool str_is_number(string& str);
     bool str_is_alpha(string& str);

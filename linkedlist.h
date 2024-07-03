@@ -17,16 +17,16 @@ public:
 };
 
 class LinkedList {
+public:
     Node* head;
 
-public:
     // Default constructor
     LinkedList();
 
     // Function to insert a
     // node at the end of the
     // linked list.
-    void insertNode(string key, int value);
+    void insertNode(string& key, int& value);
 
     // Function to print the
     // linked list.
@@ -34,8 +34,7 @@ public:
 
     // Function to delete the
     // node at given position
-    void deleteNode(string key);
+    void deleteNode(string& key);
 
-private:
     bool isEmpty() { return head == nullptr; };
 };

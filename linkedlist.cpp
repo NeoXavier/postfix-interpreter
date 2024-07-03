@@ -7,7 +7,7 @@ LinkedList::LinkedList()
 }
 
 /* Inserts node at end of list */
-void LinkedList::insertNode(string key, int value)
+void LinkedList::insertNode(string& key, int& value)
 {
     // Create new node to be inserted
     Node* newNode = new Node(key, value);
@@ -40,7 +40,7 @@ void LinkedList::printList()
     }
 }
 
-void LinkedList::deleteNode(string key)
+void LinkedList::deleteNode(string& key)
 {
     // If LinkedList is empty
     if (isEmpty()) {
@@ -53,6 +53,7 @@ void LinkedList::deleteNode(string key)
     if (temp->key == key) {
         head = temp->next;
         delete temp;
+        cout << "Key deleted" << endl;
         return;
     }
 
@@ -65,7 +66,7 @@ void LinkedList::deleteNode(string key)
 
     // If while loop was exited because temp is nullptr
     if (temp == nullptr) {
-        cout << "Node not found" << endl;
+        cout << "Key not found" << endl;
         return;
     }
 
@@ -73,5 +74,6 @@ void LinkedList::deleteNode(string key)
     left->next = temp->next;
     // Delete node
     delete temp;
+    cout << "Key deleted" << endl;
     return;
 }

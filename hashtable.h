@@ -1,21 +1,21 @@
 // Standing issues:
-// make list dynamic to talbe size
-#include <list>
+// See if it is required to copy the key and values
+#include "linkedlist.h"
 #include <string>
 using namespace std;
 
 class HashTable {
 public:
-    HashTable();
+    HashTable(int size);
     bool is_empty();
     void insert(string key, int value);
     int search(string key);
     void remove(string key); // delete is a keyword
     void printTable();
+    int getIndex(string key);
 
 private:
-    int tableSize = 26;
-    unsigned long hash(char* key) const;
-    list<pair<string, int>> table[26];
-    // unsigned long hash(char key) const;
+    int tableSize;
+    int hash(std::string const& s);
+    LinkedList* table;
 };
