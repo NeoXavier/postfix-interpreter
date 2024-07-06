@@ -8,6 +8,7 @@ REPL::REPL()
 {
     postfixStack = new Stack(20);
     symbolTable = new HashTable(26);
+
     bool exit = false;
     while (!exit) {
         string expression;
@@ -15,6 +16,10 @@ REPL::REPL()
         eval(expression);
     }
 }
+
+////////////////////
+// REPL FUNCTIONS //
+///////////////////
 
 string REPL::prompt()
 {
@@ -60,44 +65,9 @@ void REPL::eval(string& expression)
     postfixStack->print();
 }
 
-bool REPL::str_is_number(string& str)
-{
-    for (char& c : str) {
-        if (!isdigit(c)) {
-            if (c == '.' || c == '-')
-                continue;
-            cout << "[REPL::str_is_number] Not a number: " << c << endl;
-            return false;
-        }
-    }
-    return true;
-}
-
-bool REPL::str_is_alpha(string& str)
-{
-    for (char& c : str) {
-        if (!isalpha(c)) {
-            cout << "[REPL::str_is_alpha] Not a letter: " << c << endl;
-            return false;
-        }
-    }
-    return true;
-}
-
-int REPL::top_to_int()
-{
-    string& postfixStackTop = postfixStack->top();
-    if (str_is_number(postfixStackTop)) {
-        cout << "[REPL::top_to_int] Number: " << postfixStackTop << endl;
-        return stoi(postfixStackTop);
-    }
-
-    if (str_is_alpha(postfixStackTop)) {
-        return symbolTable->search(postfixStackTop);
-    }
-
-    return 0;
-}
+////////////////
+// OPERATIONS //
+////////////////
 
 void REPL::arithmetic(string& op)
 {
@@ -108,7 +78,6 @@ void REPL::arithmetic(string& op)
     // Second operand
     int num2 = top_to_int();
     postfixStack->pop();
-
     int result;
 
     switch (op[0]) {
@@ -131,7 +100,7 @@ void REPL::arithmetic(string& op)
         throw std::invalid_argument("Invalid operator");
     }
 
-    cout << "[REPL::arithmetic]" << num1 << "+" << num2 << "=" << result << endl;
+    cout << "[REPL::arithmetic] " << num1 << op << num2 << "= " << result << endl;
     postfixStack->push(to_string(result));
 }
 
@@ -146,4 +115,53 @@ void REPL::assignment()
 
     // Insert into hashtable
     symbolTable->insert(var, num);
+}
+
+//////////////////////
+// Helper functions //
+//////////////////////
+
+// Checks if a string is a number
+bool REPL::str_is_number(string& str)
+{
+    for (char& c : str) {
+        if (!isdigit(c)) {
+            if (c == '.' || c == '-')
+                continue;
+            return false;
+        }
+    }
+    return true;
+}
+
+// Checks if a string is alphabetic
+bool REPL::str_is_alpha(string& str)
+{
+    for (char& c : str) {
+        if (!isalpha(c)) {
+            cout << "[REPL::str_is_alpha] Not a letter: " << c << endl;
+            return false;
+        }
+    }
+    return true;
+}
+
+// Function to convert top of stack to integer
+int REPL::top_to_int()
+{
+    // Get top of stack
+    string& postfixStackTop = postfixStack->top();
+
+    // If top of stack is a number, return it
+    if (str_is_number(postfixStackTop)) {
+        cout << "[REPL::top_to_int] Number: " << postfixStackTop << endl;
+        return stoi(postfixStackTop);
+    }
+
+    // If top of stack is a variable, return its value
+    if (str_is_alpha(postfixStackTop)) {
+        return symbolTable->search(postfixStackTop);
+    }
+
+    return 0;
 }

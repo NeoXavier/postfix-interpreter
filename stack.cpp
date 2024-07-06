@@ -64,8 +64,9 @@ int Stack::size()
 
 void Stack::print()
 {
+    cout << "Stack: [ ";
     for (int i = 0; i <= topIndex; i++) {
         cout << stack[i] << " ";
     }
-    cout << endl;
+    cout << "]" << endl;
 }

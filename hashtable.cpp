@@ -1,6 +1,5 @@
 #include "hashtable.h"
 #include <iostream>
-#include <utility>
 
 using namespace std;
 
@@ -23,7 +22,6 @@ void HashTable::insert(string key, int value)
 {
     int index = hash(key);
     auto& list = table[index];
-    cout << "[HashTable::insert] Index: " << index << endl;
 
     // Check if key already exists
     bool keyFound = false;
@@ -33,7 +31,7 @@ void HashTable::insert(string key, int value)
     while (nodePtr != nullptr) {
         if (nodePtr->key == key) {
             nodePtr->value = value;
-            cout << "[HashTable::insert] Key already exists, replacing stored value" << endl;
+            cout << "[HashTable::insert] Key already exists, replacing" + key + " with stored value " << value << endl;
             keyFound = true;
             break;
         }
@@ -49,17 +47,15 @@ void HashTable::insert(string key, int value)
 
 int HashTable::search(string key)
 {
-    cout << "[HashTable::search] [" << key << "]" << endl;
     int index = hash(key);
-    cout << "[HashTable::search] Index: " << index << endl;
     auto& list = table[index];
+
+    cout << "[HashTable::search] Searching " + key + " at index " << index << endl;
 
     Node* nodePtr = list.head;
 
     while (nodePtr != nullptr) {
         if (nodePtr->key == key) {
-            cout << "[HashTable::search] Key found" << endl;
-            cout << "[HashTable::search] Value: " << nodePtr->value << endl;
             return nodePtr->value;
         }
         nodePtr = nodePtr->next;
