@@ -9,9 +9,11 @@ HashTable::HashTable(int size)
     table = new LinkedList[size];
 }
 
-bool HashTable::is_empty()
+bool HashTable::isEmpty()
 {
+    // Loop through all linked lists in the table
     for (int i = 0; i < tableSize; i++) {
+        // Check that the linked list is empty, if not return false
         if (!table[i].isEmpty())
             return false;
     }
@@ -20,11 +22,10 @@ bool HashTable::is_empty()
 
 void HashTable::insert(string key, int value)
 {
+    // Get the hash of the key and access the linked list at that index
     int index = hash(key);
     auto& list = table[index];
 
-    // Check if key already exists
-    bool keyFound = false;
     Node* nodePtr = list.head;
 
     // Search for key in linked list, if found, replace value
@@ -32,28 +33,25 @@ void HashTable::insert(string key, int value)
         if (nodePtr->key == key) {
             nodePtr->value = value;
             cout << "[HashTable::insert] Key already exists, replacing" + key + " with stored value " << value << endl;
-            keyFound = true;
-            break;
+            return;
         }
         nodePtr = nodePtr->next;
     }
 
-    if (!keyFound) {
-        list.insertNode(key, value);
-    }
+    // If key does not exist in the list, insert it
+    list.insertNode(key, value);
 
     return;
 }
 
 int HashTable::search(string key)
 {
+    // Get the hash of the key and access the linked list at that index
     int index = hash(key);
     auto& list = table[index];
 
-    cout << "[HashTable::search] Searching " + key + " at index " << index << endl;
-
+    // Search for key in linked list, and return value if found
     Node* nodePtr = list.head;
-
     while (nodePtr != nullptr) {
         if (nodePtr->key == key) {
             return nodePtr->value;
@@ -67,14 +65,25 @@ int HashTable::search(string key)
 
 void HashTable::remove(string key)
 {
-
+    // Get the hash of the key and access the linked list at that index
     int index = hash(key);
     auto& list = table[index];
 
-    list.deleteNode(key);
+    // Search for key in linked list, and delete if found
+    Node* nodePtr = list.head;
+    while (nodePtr != nullptr) {
+        if (nodePtr->key == key) {
+            list.deleteNode(key);
+            return;
+        }
+        nodePtr = nodePtr->next;
+    }
+
+    cout << "[HashTable::remove] Key not found" << endl;
     return;
 }
 
+// Prints table
 void HashTable::printTable()
 {
     cout << "Printing table" << endl;
@@ -86,10 +95,6 @@ void HashTable::printTable()
         table[i].printList();
     }
     cout << "--------------" << endl;
-}
-int HashTable::getIndex(string key)
-{
-    return hash(key);
 }
 
 // djb2 hash function from https://stackoverflow.com/questions/19892609/djb2-by-dan-bernstein-for-c

@@ -7,7 +7,7 @@ LinkedList::LinkedList()
 }
 
 /* Inserts node at end of list */
-void LinkedList::insertNode(string& key, int& value)
+void LinkedList::insertNode(string& key, int value)
 {
     // Create new node to be inserted
     Node* newNode = new Node(key, value);

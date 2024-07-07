@@ -21,6 +21,7 @@ REPL::REPL()
 // REPL FUNCTIONS //
 ///////////////////
 
+// Shows a prompt and gets the user input
 string REPL::prompt()
 {
     string input;
@@ -29,6 +30,7 @@ string REPL::prompt()
     return input;
 }
 
+// Evaluates the expression
 void REPL::eval(string& expression)
 {
     // Print symbol table
@@ -39,7 +41,6 @@ void REPL::eval(string& expression)
 
     istringstream iss(expression);
     string token;
-
     // Tokenize and loop through tokens
     while (getline(iss, token, ' ')) {
 
@@ -69,6 +70,7 @@ void REPL::eval(string& expression)
 // OPERATIONS //
 ////////////////
 
+// Performs arithmetic operations using the top 2 elements of the stack based on the input operator
 void REPL::arithmetic(string& op)
 {
     // First operand
@@ -78,8 +80,8 @@ void REPL::arithmetic(string& op)
     // Second operand
     int num2 = top_to_int();
     postfixStack->pop();
-    int result;
 
+    int result;
     switch (op[0]) {
     case '+':
         result = num1 + num2;
@@ -104,14 +106,32 @@ void REPL::arithmetic(string& op)
     postfixStack->push(to_string(result));
 }
 
+// Assigns a value to a variable using the top 2 elements of the stack
 void REPL::assignment()
 {
-    // TODO:order and type checking
-    int num = stoi(postfixStack->top());
+    // Get top two elements
+    string el1 = postfixStack->top();
+    postfixStack->pop();
+    string el2 = postfixStack->top();
     postfixStack->pop();
 
-    string var = postfixStack->top();
-    postfixStack->pop();
+    // Check if one is a number and the other is a variable
+    if ((str_is_number(el1) && str_is_alpha(el2)) || (str_is_alpha(el1) && str_is_number(el2))) {
+        throw std::invalid_argument("Invalid assignment");
+        return;
+    }
+
+    int num;
+    string var;
+
+    // Determine which is the number and which is the variable
+    if (str_is_number(el1)) {
+        num = stoi(el1);
+        var = el2;
+    } else {
+        num = stoi(el2);
+        var = el1;
+    }
 
     // Insert into hashtable
     symbolTable->insert(var, num);
@@ -146,7 +166,7 @@ bool REPL::str_is_alpha(string& str)
     return true;
 }
 
-// Function to convert top of stack to integer
+// Function to convert top of stack to integer, as it can either be a number or a variable
 int REPL::top_to_int()
 {
     // Get top of stack
@@ -154,7 +174,6 @@ int REPL::top_to_int()
 
     // If top of stack is a number, return it
     if (str_is_number(postfixStackTop)) {
-        cout << "[REPL::top_to_int] Number: " << postfixStackTop << endl;
         return stoi(postfixStackTop);
     }
 
