@@ -116,7 +116,7 @@ void REPL::assignment()
     postfixStack->pop();
 
     // Check if one is a number and the other is a variable
-    if ((str_is_number(el1) && str_is_alpha(el2)) || (str_is_alpha(el1) && str_is_number(el2))) {
+    if ((str_is_alpha(el1) && str_is_alpha(el2)) || (str_is_number(el1) && str_is_number(el2))) {
         throw std::invalid_argument("Invalid assignment");
         return;
     }
