@@ -32,7 +32,7 @@ void HashTable::insert(string key, double value)
     while (nodePtr != nullptr) {
         if (nodePtr->key == key) {
             nodePtr->value = value;
-            cout << "Key already exists, replacing" + key + " with stored value " << value << endl;
+            cout << "Key already exists, replacing " + key + " with stored value " << value << endl;
             return;
         }
         nodePtr = nodePtr->next;

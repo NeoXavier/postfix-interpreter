@@ -34,7 +34,7 @@ string REPL::prompt()
 void REPL::eval(string& expression)
 {
     // Print symbol table
-    if (expression == "printTable") {
+    if (expression == "print") {
         symbolTable->printTable();
         return;
     }
@@ -48,6 +48,7 @@ void REPL::eval(string& expression)
     // Clear stack
     if (expression == "clear") {
         postfixStack->clear();
+        postfixStack->print();
         return;
     }
 
@@ -129,7 +130,7 @@ void REPL::arithmetic(string& op)
         throw std::invalid_argument("Invalid operator");
     }
 
-    cout << num1 << op << num2 << "= " << result << endl;
+    cout << num1 << op << num2 << " = " << result << endl;
     postfixStack->push(to_string(result));
 }
 
