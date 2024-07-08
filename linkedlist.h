@@ -8,7 +8,7 @@ public:
     int value;
     Node* next;
 
-    Node(string key, int value)
+    Node(string key, double value)
         : key(key)
         , value(value)
         , next(nullptr)
@@ -24,7 +24,7 @@ public:
     LinkedList();
 
     // Insert a node at the end of the linked list.
-    void insertNode(string& key, int value);
+    void insertNode(string& key, double value);
 
     // Deletes a node with the given key.
     void deleteNode(string& key);

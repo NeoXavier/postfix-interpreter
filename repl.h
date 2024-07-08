@@ -17,6 +17,9 @@ private:
     // Operations
     void arithmetic(string& op);
     void assignment();
+    void mathFunc(string& func);
+    void del();
+    void search();
 
     // Data members
     Stack* postfixStack;
@@ -25,5 +28,6 @@ private:
     // Helper functions
     bool str_is_number(string& str);
     bool str_is_alpha(string& str);
-    int top_to_int();
+    double top_to_num();
+    bool exit = false;
 };

@@ -20,7 +20,7 @@ bool HashTable::isEmpty()
     return true;
 }
 
-void HashTable::insert(string key, int value)
+void HashTable::insert(string key, double value)
 {
     // Get the hash of the key and access the linked list at that index
     int index = hash(key);
@@ -32,7 +32,7 @@ void HashTable::insert(string key, int value)
     while (nodePtr != nullptr) {
         if (nodePtr->key == key) {
             nodePtr->value = value;
-            cout << "[HashTable::insert] Key already exists, replacing" + key + " with stored value " << value << endl;
+            cout << "Key already exists, replacing" + key + " with stored value " << value << endl;
             return;
         }
         nodePtr = nodePtr->next;
@@ -59,7 +59,7 @@ int HashTable::search(string key)
         nodePtr = nodePtr->next;
     }
 
-    cout << "[HashTable::search] Key not found" << endl;
+    cout << "Key not found" << endl;
     return 0;
 }
 
@@ -69,17 +69,8 @@ void HashTable::remove(string key)
     int index = hash(key);
     auto& list = table[index];
 
-    // Search for key in linked list, and delete if found
-    Node* nodePtr = list.head;
-    while (nodePtr != nullptr) {
-        if (nodePtr->key == key) {
-            list.deleteNode(key);
-            return;
-        }
-        nodePtr = nodePtr->next;
-    }
-
-    cout << "[HashTable::remove] Key not found" << endl;
+    // Delete node with key
+    list.deleteNode(key);
     return;
 }
 
@@ -91,7 +82,7 @@ void HashTable::printTable()
     for (int i = 0; i < tableSize; i++) {
         if (table[i].isEmpty())
             continue;
-        cout << "List index: " << i << endl;
+        cout << "[ " << i << " ] ";
         table[i].printList();
     }
     cout << "--------------" << endl;

@@ -1,4 +1,5 @@
 #include "repl.h"
+#include <cmath>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
@@ -7,9 +8,8 @@
 REPL::REPL()
 {
     postfixStack = new Stack(20);
-    symbolTable = new HashTable(26);
+    symbolTable = new HashTable(10);
 
-    bool exit = false;
     while (!exit) {
         string expression;
         expression = prompt();
@@ -39,6 +39,18 @@ void REPL::eval(string& expression)
         return;
     }
 
+    // Exit REPL
+    if (expression == "exit") {
+        exit = true;
+        return;
+    }
+
+    // Clear stack
+    if (expression == "clear") {
+        postfixStack->clear();
+        return;
+    }
+
     istringstream iss(expression);
     string token;
     // Tokenize and loop through tokens
@@ -49,9 +61,24 @@ void REPL::eval(string& expression)
             arithmetic(token);
         }
 
+        // If token is a math function
+        else if (token == "sqrt" || token == "sin" || token == "cos" || token == "tan" || token == "log") {
+            mathFunc(token);
+        }
+
         // Token is an assignment operator
         else if (token == "=") {
             assignment();
+        }
+
+        // If token is a delete operator
+        else if (token == "DEL") {
+            del();
+        }
+
+        // If token is a search operator
+        else if (token == "?") {
+            search();
         }
 
         // If token is a number or alphabet, push to postfixStack
@@ -74,14 +101,14 @@ void REPL::eval(string& expression)
 void REPL::arithmetic(string& op)
 {
     // First operand
-    int num1 = top_to_int();
+    double num1 = top_to_num();
     postfixStack->pop();
 
     // Second operand
-    int num2 = top_to_int();
+    double num2 = top_to_num();
     postfixStack->pop();
 
-    int result;
+    double result;
     switch (op[0]) {
     case '+':
         result = num1 + num2;
@@ -102,7 +129,7 @@ void REPL::arithmetic(string& op)
         throw std::invalid_argument("Invalid operator");
     }
 
-    cout << "[REPL::arithmetic] " << num1 << op << num2 << "= " << result << endl;
+    cout << num1 << op << num2 << "= " << result << endl;
     postfixStack->push(to_string(result));
 }
 
@@ -121,20 +148,78 @@ void REPL::assignment()
         return;
     }
 
-    int num;
+    double num;
     string var;
 
     // Determine which is the number and which is the variable
     if (str_is_number(el1)) {
-        num = stoi(el1);
+        num = stod(el1);
         var = el2;
     } else {
-        num = stoi(el2);
+        num = stod(el2);
         var = el1;
     }
 
     // Insert into hashtable
     symbolTable->insert(var, num);
+}
+
+void REPL::mathFunc(string& func)
+{
+    // Get top of stack
+    double num = top_to_num();
+    postfixStack->pop();
+    // Perform math function
+    double result;
+    if (func == "sqrt") {
+        result = sqrt(num);
+    } else if (func == "sin") {
+        result = sin(num);
+    } else if (func == "cos") {
+        result = cos(num);
+    } else if (func == "tan") {
+        result = tan(num);
+    } else if (func == "log") {
+        result = log(num);
+    } else {
+        throw std::invalid_argument("Invalid math function");
+    }
+
+    cout << func << "(" << num << ") = " << result << endl;
+    postfixStack->push(to_string(result));
+}
+
+// Deletes a symbol from the symbol table
+void REPL::del()
+{
+    // Get the key from top of the stack
+    string& key = postfixStack->top();
+    postfixStack->pop();
+
+    // Check if key is a valid variable
+    if (!str_is_alpha(key)) {
+        throw std::invalid_argument("Invalid variable");
+    }
+
+    // Remove the key from the symbol table
+    symbolTable->remove(key);
+}
+
+// Searches and prints the value of a variable in the symbol table
+void REPL::search()
+{
+    // Get the key from top of the stack
+    string& key = postfixStack->top();
+
+    // Check if key is a valid variable
+    if (!str_is_alpha(key)) {
+        throw std::invalid_argument("Invalid variable");
+    }
+
+    // Search for the key in the symbol table
+    double value = symbolTable->search(key);
+    cout << key << " = " << value << endl;
+    postfixStack->pop();
 }
 
 //////////////////////
@@ -159,22 +244,21 @@ bool REPL::str_is_alpha(string& str)
 {
     for (char& c : str) {
         if (!isalpha(c)) {
-            cout << "[REPL::str_is_alpha] Not a letter: " << c << endl;
             return false;
         }
     }
     return true;
 }
 
-// Function to convert top of stack to integer, as it can either be a number or a variable
-int REPL::top_to_int()
+// Function to convert top of stack to a decimal number, as it can either be a number or a variable
+double REPL::top_to_num()
 {
     // Get top of stack
     string& postfixStackTop = postfixStack->top();
 
     // If top of stack is a number, return it
     if (str_is_number(postfixStackTop)) {
-        return stoi(postfixStackTop);
+        return stod(postfixStackTop);
     }
 
     // If top of stack is a variable, return its value

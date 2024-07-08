@@ -67,6 +67,11 @@ bool Stack::isEmpty()
     return topIndex == -1;
 }
 
+void Stack::clear()
+{
+    topIndex = -1;
+}
+
 // Returns the number of elements in the stack
 int Stack::size()
 {
@@ -77,7 +82,7 @@ int Stack::size()
 void Stack::print()
 {
     cout << "Stack: [ ";
-    for (int i = 0; i <= topIndex; i++) {
+    for (int i = topIndex; i >= 0; i--) {
         cout << stack[i] << " ";
     }
     cout << "]" << endl;

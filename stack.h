@@ -10,6 +10,7 @@ public:
     void pop();
     string& top();
     bool isEmpty();
+    void clear();
     int size();
     void print();
 
