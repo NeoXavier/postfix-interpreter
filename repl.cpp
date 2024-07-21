@@ -31,6 +31,26 @@ string REPL::prompt()
 }
 
 // Evaluates the expression
+/*
+ * Pseudocode
+
+  EVAL(expression)
+    Tokenize expression using space as delimiter
+    for each token In expression
+        if token is an arithmetic operator
+            ARITHMETIC(token)
+        elseif token is a mathematical function
+            MATHFUNC()
+        elseif token is " ="
+            ASSIGNMENT()
+        elseif token is " DEL"
+            DEL()
+        elseif token is "SCH"
+            SEARCH()
+        elseif token is numeric or alphabetical
+            Push token to postfixStack
+        else PRINT(" Invalid character")
+*/
 void REPL::eval(string& expression)
 {
     // Print symbol table
@@ -99,6 +119,24 @@ void REPL::eval(string& expression)
 ////////////////
 
 // Performs arithmetic operations using the top 2 elements of the stack based on the input operator
+/*
+* Pseudocode
+
+  ARITHMETIC(op)
+    Pop postfixStack twice and store values in numi and num2
+    if op ='+'
+        result = num] + num2
+    if op = '-'
+        result = num1 - num2
+    if op = '*>
+        result = num] * num2
+    if op ='/'
+        result = num1 ÷ num2
+        if num2 = 0
+            error
+    PUSH result to postfixStack
+
+*/
 void REPL::arithmetic(string& op)
 {
     // First operand
@@ -135,6 +173,17 @@ void REPL::arithmetic(string& op)
 }
 
 // Assigns a value to a variable using the top 2 elements of the stack
+/*
+* Pseudocode
+
+  ASSIGNMENT()
+    Insert (var, num) into symbolTable
+    Pop postfixStack twice and store values in ell and el2
+    if ell and el2 are both alphabetical or both numeric
+        error
+    Insert el2 into symbolTable with key ell or vice versa based on type
+
+*/
 void REPL::assignment()
 {
     // Get top two elements

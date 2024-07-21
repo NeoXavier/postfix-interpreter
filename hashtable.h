@@ -7,7 +7,7 @@ public:
     HashTable(int size);
     bool isEmpty();
     void insert(string key, double value);
-    int search(string key);
+    double search(string key);
     void remove(string key); // delete is a keyword
     void printTable();
 

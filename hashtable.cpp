@@ -20,6 +20,23 @@ bool HashTable::isEmpty()
     return true;
 }
 
+// Inserts a key-value pair into the hash table
+/*
+ * Pseudocode
+
+ INSERT (key, value)
+    index = HASH(key)
+    list = table|index]
+    nodePtr = list.head
+    while nodePtr # NIL
+        if nodePtr.key = key
+            nodePtr.value = value
+            return
+        nodePtr = nodePtr.next
+    Insert node (key, value) into list
+    return
+
+ */
 void HashTable::insert(string key, double value)
 {
     // Get the hash of the key and access the linked list at that index
@@ -44,7 +61,23 @@ void HashTable::insert(string key, double value)
     return;
 }
 
-int HashTable::search(string key)
+// Searches for a key in the hash table and returns the value
+/*
+ * Pseudocode
+
+ SEARCH (key)
+    index = HASH(key)
+    list = table[index]
+    nodePtr = list.head
+    while nodePtr # NIL
+        if nodePtr.key = key
+            return nodePtr.value
+        nodePtr = nodePtr.next
+    print "Key not found"
+    return 0
+
+ */
+double HashTable::search(string key)
 {
     // Get the hash of the key and access the linked list at that index
     int index = hash(key);
@@ -63,6 +96,17 @@ int HashTable::search(string key)
     return 0;
 }
 
+// Removes a key-value pair from the hash table
+/*
+ * Pseudocode
+
+ DELETE (key)
+    index = HASH(key)
+    list = table[index]
+    DELETE node with key from list
+    return
+
+ */
 void HashTable::remove(string key)
 {
     // Get the hash of the key and access the linked list at that index
@@ -89,6 +133,15 @@ void HashTable::printTable()
 }
 
 // djb2 hash function from https://stackoverflow.com/questions/19892609/djb2-by-dan-bernstein-for-c
+/*
+ * Pseudocode
+
+    hash = 5381
+    for each character In s
+        hash = hash × 33 + (ASCII value of character)
+    return hash % tableSize
+
+ */
 int HashTable::hash(std::string const& s)
 {
     unsigned long hash = 5381;

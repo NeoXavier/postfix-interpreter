@@ -21,6 +21,21 @@ Stack::Stack(int capacity)
 }
 
 // Adds an element to the top of the stack
+/*
+ * Pseudocode
+
+ PUSH(value)
+    if topIndex = capacity - 1
+        Create newStack of size capacity * 2
+        for i = 0 to capacity - 1
+            newStack|i] = stack|i]
+        Delete array stack
+        stack = newStack
+        capacity = capacity * 2
+    topIndex = topIndex + 1
+    stack topIndex = value
+
+*/
 void Stack::push(string value)
 {
     // If the stack is full, double the capacity
@@ -39,6 +54,16 @@ void Stack::push(string value)
 }
 
 // "Removes" the top element of the stack
+/*
+ * Pseudocode
+
+ POP()
+    if topIndex = -1
+        Print "Stack is empty"
+        return
+    topIndex = topIndex - 1
+
+*/
 void Stack::pop()
 {
     // If the stack is empty, print an error message
@@ -52,6 +77,15 @@ void Stack::pop()
 }
 
 // Returns the top element of the stack
+/*
+ * Pseudocode
+
+ TOP()
+    if topIndex = -1
+        error
+    return stack[topIndex]
+
+*/
 string& Stack::top()
 {
     // If the stack is empty, throw an exception
