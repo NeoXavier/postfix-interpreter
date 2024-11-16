@@ -35,5 +35,5 @@ or the name of the compiled binary if you have renamed it.
 
 
 ## Report
-A report describing the various algorithms and data structures used in the program can be found in the root directory.
+A [report](report.pdf) describing the various algorithms and data structures used in the program can be found in the root directory.
 
